@@ -1,24 +1,53 @@
 from flask import Flask, request
 import sqlite3
+import json
 
 app = Flask(__name__)
 
-database = sqlite3.connect("data/database.db")
-database.row_factory = sqlite3.Row
-dbcur = database.cursor()
+#database = sqlite3.connect("data/database.db")
+#database.row_factory = sqlite3.Row
+#dbcur = database.cursor()
 
 @app.route("/")
 def index():
-    pass
+    response = {"status": "error", "reason": "invalid path"}
+    return json.dumps(response)
 
 @app.route("/register", methods=["POST"])
 def register():
-    if request.method == "POST":
-        name = request.form.get("name") if request.form.get("name") else False
-        password = request.form.get("password") if request.form.get("password") else False
-        pass
-    else
-        pass
+    response = {}
+
+    if (request.is_json):
+        content = request.get_json()
+        if(content["username"] and content["password"]):
+            # TODO
+            pass
+        else:
+            response["status"] = "error"
+            response["reason"] = "missing username or password"
+    else:
+        response["status"] = "error"
+        response["reason"] = "Invalid JSON"
+
+    return json.dumps(response)
+
+@app.route("/login", methods=["POST"])
+def register():
+    response = {}
+
+    if (request.is_json):
+        content = request.get_json()
+        if(content["username"] and content["password"]):
+            # TODO
+            pass
+        else:
+            response["status"] = "error"
+            response["reason"] = "missing username or password"
+    else:
+        response["status"] = "error"
+        response["reason"] = "Invalid JSON"
+
+    return json.dumps(response)
 
 if __name__ == '__main__':
     app.run("127.0.0.1", "8000")
