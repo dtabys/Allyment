@@ -15,9 +15,6 @@ database.row_factory = sqlite3.Row
 SESSION_TYPE = 'memcached'
 app.secret_key = "TEST SECRET KEY CHANGE BEFORE DEPLOYMENT"
 
-
-# session.init_app(app)
-
 @app.route("/")
 def index():
     response = {"status": "error", "reason": "invalid path"}
@@ -92,7 +89,6 @@ def accinfo():
         if (request.is_json):
             if (session.get("loggedin")):
                 content = request.get_json()
-<<<<<<< HEAD
                 if(content["accountId"]):
                     if(content["accountId"] == session.get("accountId")):
                         account = get_account(cursor, content["accountId"])
@@ -102,12 +98,6 @@ def accinfo():
                         else:
                             response["status"] = "notfound"
                             response["reason"] = "account not found"
-=======
-                if (content["accountId"]):
-                    account = get_account(cursor, content["accountId"])
-                    if (account):
-                        response["status"] = "success"
->>>>>>> 670ad774ddfaf38942c6648f9c3bacee08001e1f
                     else:
                         response["status"] = "unauthorized"
                         response["reason"] = "access denied"
