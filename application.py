@@ -3,7 +3,7 @@ import sqlite3
 from sqlite3 import Error
 import json
 from database import init_tables
-from flask.ext.session import Session
+from flask_session import Session
 
 app = Flask(__name__)
 
