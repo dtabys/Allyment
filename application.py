@@ -7,6 +7,7 @@ import json
 from database import *
 from Account import Account
 from Post import Post
+from Item import Item
 import time
 
 app = Flask(__name__)
@@ -182,6 +183,46 @@ def addpost():
                 else:
                     response["status"] = "incomplete"
                     response["reason"] = "name, location or end_time missing"
+            else:
+                response["status"] = "unauthorized"
+                response["reason"] = "not logged in"
+        else:
+            response["status"] = "error"
+            response["reason"] = "Invalid JSON"
+
+    database.commit()
+    cursor.close()
+    database.close()
+    return json.dumps(response)
+
+@app.route("/additem", methods=["POST"])
+def additem():
+    with sqlite3.connect("data/database.db") as database:
+        cursor = database.cursor()
+        response = {}
+        if (request.is_json):
+            if (session.get("loggedin")):
+                content = request.get_json()
+                print(content)
+                if(content["name"] and content["quantity"] and content["postId"]):
+                    item = Item(
+                    accountID=session["accountId"],
+                    items=content["name"],
+                    quantity=content["quantity"],
+                    postId=content["postId"],
+                    description=(content["description"] if content["description"] else ""),
+                    tags=(content["tags"] if (content["tags"] and type(content["tags"]) == list) else [])
+                    )
+                    itemId = add_item(cursor, item)
+                    if(itemId):
+                        response["status"] = "success"
+                        response["result"] = {"itemId" : itemId}
+                    else:
+                        response["status"] = "error"
+                        response["reason"] = "failed to add item"
+                else:
+                    response["status"] = "incomplete"
+                    response["reason"] = "name, quantity or postId missing"
             else:
                 response["status"] = "unauthorized"
                 response["reason"] = "not logged in"
