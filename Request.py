@@ -28,6 +28,5 @@ class Request:
     def getquantity(self):
         return self.quantity
 
-
     def get_db_items(self):
         return ', '.join(self.items)

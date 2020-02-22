@@ -1,13 +1,14 @@
 class Post:
 
     # Initializer / Instance Attributes
-    def __init__(self, accountID, postID, items, location, starttime, duetime, contact, description, logistics, tags, requests, name):
+    def __init__(self, postID, accountID, name, items, location, start_time, end_time, contact, description, logistics,
+                 tags, requests):
         self.accountID = accountID
         self.postID = postID
         self.items = items
         self.location = location
-        self.starttime = starttime
-        self.duetime = duetime
+        self.start_time = start_time
+        self.end_time = end_time
         self.contact = contact
         self.description = description
         self.logistics = logistics
@@ -33,11 +34,11 @@ class Post:
 
     # instance method
     def getstarttime(self):
-        return self.starttime
+        return self.start_time
 
     # instance method
     def getduetime(self):
-        return self.duetime
+        return self.end_time
 
     # instance method
     def getcontact(self):
