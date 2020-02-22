@@ -1,11 +1,12 @@
 from flask import Flask, request
 import sqlite3
+from sqlite3 import Error
 
 app = Flask(__name__)
 
 database = sqlite3.connect("data/database.db")
 database.row_factory = sqlite3.Row
-dbcur = database.cursor()
+db_cursor = database.cursor()
 
 @app.route("/")
 def index():
