@@ -1,14 +1,17 @@
-from flask import Flask, request
+from flask import Flask, request, session
 import sqlite3
 from sqlite3 import Error
 import json
 from database import init_tables
+from flask.ext.session import Session
 
 app = Flask(__name__)
 
 database = sqlite3.connect("data/database.db")
 database.row_factory = sqlite3.Row
 
+SESSION_TYPE = 'memcached'
+Session(app)
 
 @app.route("/")
 def index():
