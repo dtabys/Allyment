@@ -38,4 +38,7 @@ class Item:
         return self.itemID
 
     def get_db_tags(self):
-        return ', '.join(self.tags)
+        return ','.join(self.tags)
+
+    def get_db_array(self):
+        return [self.accountID, self.postID, self.name, self.description, self.get_db_tags(), self.quantity]

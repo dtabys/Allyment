@@ -53,7 +53,8 @@ def get_account(cur, account_id):
                 [account_id])
     row = cur.fetchone()
     if row:
-        account = Account(accountID=account_id, name=row[0], contact=row[1], notifications=row[2], filters=row[3], posts=row[4], requests=row[5])
+        account = Account(accountID=account_id, name=row[0], contact=row[1], notifications=row[2], filters=row[3],
+                          posts=row[4], requests=row[5])
     else:
         account = None
     return account
@@ -74,7 +75,9 @@ def get_post(cur, post_id):
         FROM posts WHERE id = ?''', [post_id])
     row = cur.fetchone()
     if row:
-        account = Post(post_id, row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10])
+        account = Post(postID=post_id, accountID=row[0], name=row[1], items=row[2], location=row[3], start_time=row[4],
+                       end_time=row[5], contact=row[6], description=row[7], logistics=row[8], tags=row[9],
+                       requests=row[10])
     else:
         account = None
     return account
@@ -94,7 +97,8 @@ def get_item(cur, item_id):
         FROM posts WHERE id = ?''', [item_id])
     row = cur.fetchone()
     if row:
-        item = Item()
+        item = Item(accountID=row[0], postID=row[1], name=row[2], description=row[3], tags=row[4], quantity=row[5],
+                    itemID=item_id)
     else:
         item = None
     return item
