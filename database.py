@@ -1,5 +1,17 @@
 import sqlite3
 from sqlite3 import Error
+import hashlib
+import os
+
+salt = os.urandom(32)
+
+def hash_passwd(password):
+    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+    storage = salt + key
+    return storage
+
+def salt_key(storage):
+    return (storage[:32], storage[32:]) # (salt, key)
 
 
 def create_table(cur, create_table_sql):
@@ -7,6 +19,13 @@ def create_table(cur, create_table_sql):
         cur.execute(create_table_sql)
     except Error as e:
         print(e)
+
+
+def check_login(cur, user_name, password):
+    password = hash_passwd(password)
+    cur.execute("SELECT id FROM accounts WHERE passwd = ? AND name = ?", [password, user_name])
+    account_id = cur.fetchone()
+    return account_id
 
 
 sql_create_accounts_table = """ CREATE TABLE IF NOT EXISTS accounts (
