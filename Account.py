@@ -33,4 +33,14 @@ class AccountID:
     def getrequests(self):
         return self.requests
 
+    def get_db_notifications(self):
+        return ','.join(self.notifications)
 
+    def get_db_filters(self):
+        return ','.join(self.filters)
+
+    def get_db_posts(self):
+        return ','.join(self.posts)
+
+    def get_db_requests(self):
+        return ','.join(self.requests)
