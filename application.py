@@ -14,7 +14,9 @@ database.row_factory = sqlite3.Row
 
 SESSION_TYPE = 'memcached'
 app.secret_key = "TEST SECRET KEY CHANGE BEFORE DEPLOYMENT"
-#session.init_app(app)
+
+
+# session.init_app(app)
 
 @app.route("/")
 def index():
@@ -33,7 +35,7 @@ def register():
             content = request.get_json()
             if (content["username"] and content["password"]):
                 account = Account(content["username"])
-                if(register_account(cursor, account, content["password"])):
+                if (register_account(cursor, account, content["password"])):
                     response["status"] = "success"
                 else:
                     response["status"] = "error"
@@ -61,7 +63,7 @@ def login():
             content = request.get_json()
             if (content["username"] and content["password"]):
                 accountId = check_login(cursor, content["username"], content["password"])
-                if(accountId is None):
+                if (accountId is None):
                     response["status"] = "unauthorized"
                     response["reason"] = "username or password incorrect"
                 else:
@@ -81,14 +83,16 @@ def login():
         cursor.close()
         return json.dumps(response)
 
+
 @app.route("/accinfo", methods=["POST"])
 def accinfo():
     with sqlite3.connect("data/database.db") as database:
         cursor = database.cursor()
         response = {}
         if (request.is_json):
-            if(session.get("loggedin")):
+            if (session.get("loggedin")):
                 content = request.get_json()
+<<<<<<< HEAD
                 if(content["accountId"]):
                     if(content["accountId"] == session.get("accountId")):
                         account = get_account(cursor, content["accountId"])
@@ -98,6 +102,12 @@ def accinfo():
                         else:
                             response["status"] = "notfound"
                             response["reason"] = "account not found"
+=======
+                if (content["accountId"]):
+                    account = get_account(cursor, content["accountId"])
+                    if (account):
+                        response["status"] = "success"
+>>>>>>> 670ad774ddfaf38942c6648f9c3bacee08001e1f
                     else:
                         response["status"] = "unauthorized"
                         response["reason"] = "access denied"
@@ -114,6 +124,7 @@ def accinfo():
     cursor.close()
     database.close()
     return json.dumps(response)
+
 
 if __name__ == '__main__':
     with sqlite3.connect("data/database.db") as database:

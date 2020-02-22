@@ -1,7 +1,6 @@
 class Item:
 
-    # Initializer / Instance Attributes
-    def __init__(self, accountID, postID, name, description, tags, quantity itemID):
+    def __init__(self, accountID, postID, name, description, tags, quantity, itemID):
         self.accountID = accountID
         self.postID = postID
         self.name = name
@@ -37,7 +36,6 @@ class Item:
     # instance method
     def getitemID(self):
         return self.itemID
-
 
     def get_db_tags(self):
         return ', '.join(self.tags)

@@ -1,7 +1,7 @@
 class Account:
 
     # Initializer / Instance Attributes
-    def __init__(self,name, accountID=None, notifications=False, filters=[], posts=[], requests=[]):
+    def __init__(self, name, accountID=None, notifications=False, filters=[], posts=[], requests=[]):
         self.accountID = accountID
         self.name = name
         self.notifications = notifications
