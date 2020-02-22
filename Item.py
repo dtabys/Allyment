@@ -1,6 +1,6 @@
 class Item:
 
-    def __init__(self, accountID=None, postID=None, name, description="", tags=[], quantity=0, itemID=None):
+    def __init__(self, name, accountID=None, postID=None, description="", tags=[], quantity=0, itemID=None):
         self.accountID = accountID
         self.postID = postID
         self.name = name
@@ -38,7 +38,4 @@ class Item:
         return self.itemID
 
     def get_db_tags(self):
-        return ','.join(self.tags)
-
-    def get_db_array(self):
-        return [self.accountID, self.postID, self.name, self.description, self.get_db_tags(), self.quantity]
+        return ', '.join(self.tags)

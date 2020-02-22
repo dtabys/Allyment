@@ -207,9 +207,9 @@ def additem():
                 if(content["name"] and content["quantity"] and content["postId"]):
                     item = Item(
                     accountID=session["accountId"],
-                    items=content["name"],
+                    name=content["name"],
                     quantity=content["quantity"],
-                    postId=content["postId"],
+                    postID=content["postId"],
                     description=(content["description"] if content["description"] else ""),
                     tags=(content["tags"] if (content["tags"] and type(content["tags"]) == list) else [])
                     )
@@ -223,6 +223,37 @@ def additem():
                 else:
                     response["status"] = "incomplete"
                     response["reason"] = "name, quantity or postId missing"
+            else:
+                response["status"] = "unauthorized"
+                response["reason"] = "not logged in"
+        else:
+            response["status"] = "error"
+            response["reason"] = "Invalid JSON"
+
+    database.commit()
+    cursor.close()
+    database.close()
+    return json.dumps(response)
+
+@app.route("/getitem", methods=["POST"])
+def getitem():
+    with sqlite3.connect("data/database.db") as database:
+        cursor = database.cursor()
+        response = {}
+        if (request.is_json):
+            if (session.get("loggedin")):
+                content = request.get_json()
+                if(content["itemId"]):
+                    item = get_item(cursor, content["itemId"])
+                    if(post):
+                        response["status"] = "success"
+                        response["result"] = item.__dict__
+                    else:
+                        response["status"] = "notfound"
+                        response["reason"] = "item not found"
+                else:
+                    response["status"] = "incomplete"
+                    response["reason"] = "itemId missing"
             else:
                 response["status"] = "unauthorized"
                 response["reason"] = "not logged in"
