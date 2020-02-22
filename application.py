@@ -4,7 +4,7 @@ import random
 import string
 from sqlite3 import Error
 import json
-from database import init_tables, check_login, register_account, get_account
+from database import init_tables, check_login, register_account, get_account, get_post
 from Account import Account
 
 app = Flask(__name__)
@@ -102,7 +102,8 @@ def accinfo():
                         response["status"] = "unauthorized"
                         response["reason"] = "access denied"
                 else:
-                    pass
+                    response["status"] = "incomplete"
+                    response["reason"] = "accountid missing"
             else:
                 response["status"] = "unauthorized"
                 response["reason"] = "not logged in"
@@ -114,6 +115,38 @@ def accinfo():
     cursor.close()
     database.close()
     return json.dumps(response)
+
+@app.route("/getpost", methods=["POST"])
+def accinfo():
+    with sqlite3.connect("data/database.db") as database:
+        cursor = database.cursor()
+        response = {}
+        if (request.is_json):
+            if (session.get("loggedin")):
+                content = request.get_json()
+                if(content["postId"]):
+                    post = get_post(cursor, content["postId"])
+                    if(post):
+                        response["status"] = "success"
+                        response["result"] = post.__dict__
+                    else:
+                        response["status"] = "notfound"
+                        response["reason"] = "post not found"
+                else:
+                    response["status"] = "incomplete"
+                    response["reason"] = "postid missing"
+            else:
+                response["status"] = "unauthorized"
+                response["reason"] = "not logged in"
+        else:
+            response["status"] = "error"
+            response["reason"] = "Invalid JSON"
+
+    database.commit()
+    cursor.close()
+    database.close()
+    return json.dumps(response)
+
 
 
 if __name__ == '__main__':
