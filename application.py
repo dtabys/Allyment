@@ -4,7 +4,8 @@ import random
 import string
 from sqlite3 import Error
 import json
-from database import init_tables, check_login
+from database import init_tables, check_login, register_account
+from Account import Account
 
 app = Flask(__name__)
 
@@ -23,21 +24,31 @@ def index():
 
 @app.route("/register", methods=["POST"])
 def register():
-    response = {}
+    with sqlite3.connect("data/database.db") as database:
+        response = {}
+        cursor = database.cursor()
+        session.clear()
 
-    if (request.is_json):
-        content = request.get_json()
-        if (content["username"] and content["password"]):
-            # TODO
-            pass
+        if (request.is_json):
+            content = request.get_json()
+            if (content["username"] and content["password"]):
+                account = Account(content["username"])
+                if(register_account(cursor, account, content["password"])):
+                    response["status"] = "success"
+                else:
+                    response["status"] = "error"
+                    response["reason"] = "registeration failed"
+            else:
+                response["status"] = "error"
+                response["reason"] = "missing username or password"
         else:
             response["status"] = "error"
-            response["reason"] = "missing username or password"
-    else:
-        response["status"] = "error"
-        response["reason"] = "Invalid JSON"
+            response["reason"] = "Invalid JSON"
 
-    return json.dumps(response)
+        database.commit()
+        cursor.close()
+        database.close()
+        return json.dumps(response)
 
 
 @app.route("/login", methods=["POST"])
