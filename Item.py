@@ -37,3 +37,7 @@ class Item:
     # instance method
     def getitemID(self):
         return self.itemID
+
+
+    def get_db_tags(self):
+        return ', '.join(self.tags)

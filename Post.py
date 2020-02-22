@@ -62,3 +62,15 @@ class Post:
     # instance method
     def getname(self):
         return self.name
+
+    def get_db_items(self):
+        return ','.join(self.items)
+
+    def get_db_logistis(self):
+        return ','.join(self.logistics)
+
+    def get_db_tags(self):
+        return ', '.join(self.tags)
+
+    def get_db_requests(self):
+        return ','.join(self.requests)
