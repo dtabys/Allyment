@@ -74,7 +74,7 @@ class Post:
         return ','.join(self.logistics)
 
     def get_db_tags(self):
-        return ', '.join(self.tags)
+        return ','.join(self.tags)
 
     def get_db_requests(self):
         return ','.join(self.requests)

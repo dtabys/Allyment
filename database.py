@@ -2,6 +2,7 @@ from sqlite3 import Error
 import hashlib
 from Account import Account
 from Post import Post
+from Item import Item
 
 
 def hash_password(username, password):
@@ -48,7 +49,8 @@ def register_account(cur, account, password):
 
 
 def get_account(cur, account_id):
-    cur.execute("SELECT name, contact, notifications, filters, posts, requests FROM accounts WHERE id = ?", [account_id])
+    cur.execute("SELECT name, contact, notifications, filters, posts, requests FROM accounts WHERE id = ?",
+                [account_id])
     row = cur.fetchone()
     if row:
         account = Account(account_id, row[0], row[1], row[2], row[3], row[4], row[5])
@@ -62,7 +64,6 @@ def add_post(cur, post):
                                     logistics, tags, requests)
                 VALUES(?,?,?,?,?,?,?,?,?,?,?)'''
     values = post.get_db_array()
-    print(values)
     cur.execute(insert, values)
     return cur.lastrowid
 
@@ -70,14 +71,33 @@ def add_post(cur, post):
 def get_post(cur, post_id):
     cur.execute('''
         SELECT account_id, name, items, location, start_time, end_time, contact, description, logistics, tags, requests
-        FROM posts WHERE id = ?''',
-                [post_id])
+        FROM posts WHERE id = ?''', [post_id])
     row = cur.fetchone()
     if row:
         account = Post(post_id, row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10])
     else:
         account = None
     return account
+
+
+def add_item(cur, item):
+    insert = '''INSERT INTO items(account_id, post_id, name, description, tags, quantity)
+                VALUES(?,?,?,?,?,?)'''
+    values = item.get_db_array()
+    cur.execute(insert, values)
+    return cur.lastrowid
+
+
+def get_item(cur, item_id):
+    cur.execute('''
+        SELECT account_id, post_id, name, description, tags, quantity
+        FROM posts WHERE id = ?''', [item_id])
+    row = cur.fetchone()
+    if row:
+        item = Item()
+    else:
+        item = None
+    return item
 
 
 def init_tables(cursor):
