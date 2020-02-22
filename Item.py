@@ -38,14 +38,10 @@ class Item:
         return self.itemID
 
     def get_db_tags(self):
-<<<<<<< Updated upstream
         return ','.join(self.tags)
 
     def get_db_array(self):
         return [self.accountID, self.postID, self.name, self.description, self.get_db_tags(), self.quantity]
-=======
-        return ', '.join(self.tags)
 
     def set_db_tags(self):
         return ', '.split(self.tags)
->>>>>>> Stashed changes

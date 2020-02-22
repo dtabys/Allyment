@@ -33,7 +33,7 @@ def register():
 
         if (request.is_json):
             content = request.get_json()
-            if (content["username"] and content["password"] and content["contact"]):
+            if ("username" in content and "password" in content and "contact" in content):
                 account = Account(name=content["username"], contact=content["contact"])
                 if (register_account(cursor, account, content["password"])):
                     response["status"] = "success"
@@ -61,7 +61,7 @@ def login():
 
         if (request.is_json):
             content = request.get_json()
-            if (content["username"] and content["password"]):
+            if ("username" in content and "password" in content):
                 accountId = check_login(cursor, content["username"], content["password"])
                 if (accountId is None):
                     response["status"] = "unauthorized"
@@ -92,7 +92,7 @@ def accinfo():
         if (request.is_json):
             if (session.get("loggedin")):
                 content = request.get_json()
-                if(content["accountId"]):
+                if("accountId" in content):
                     if(content["accountId"] == session.get("accountId")):
                         account = get_account(cursor, content["accountId"])
                         if(account):
@@ -127,7 +127,7 @@ def getpost():
         if (request.is_json):
             if (session.get("loggedin")):
                 content = request.get_json()
-                if(content["postId"]):
+                if("postId" in content):
                     post = get_post(cursor, content["postId"])
                     if(post):
                         response["status"] = "success"
@@ -159,7 +159,7 @@ def addpost():
             if (session.get("loggedin")):
                 content = request.get_json()
                 print(content)
-                if(content["name"] and content["location"] and content["end_time"]):
+                if("name" in content and "location" in content and "end_time" in content):
                     post = Post(
                     name=content["name"],
                     accountID=session["accountId"],
@@ -204,7 +204,7 @@ def additem():
             if (session.get("loggedin")):
                 content = request.get_json()
                 print(content)
-                if(content["name"] and content["quantity"] and content["postId"]):
+                if("name" in content and "quantity" in content and "postId" in content):
                     item = Item(
                     accountID=session["accountId"],
                     name=content["name"],
@@ -243,9 +243,9 @@ def getitem():
         if (request.is_json):
             if (session.get("loggedin")):
                 content = request.get_json()
-                if(content["itemId"]):
+                if("itemId" in content):
                     item = get_item(cursor, content["itemId"])
-                    if(post):
+                    if(item):
                         response["status"] = "success"
                         response["result"] = item.__dict__
                     else:
