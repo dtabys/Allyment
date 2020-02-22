@@ -1,7 +1,7 @@
-class AccountID:
+class Account:
 
     # Initializer / Instance Attributes
-    def __init__(self, accountID, name, notifications, filters, posts, requests):
+    def __init__(self,name, accountID=None, notifications=False, filters=[], posts=[], requests=[]):
         self.accountID = accountID
         self.name = name
         self.notifications = notifications
@@ -34,7 +34,7 @@ class AccountID:
         return self.requests
 
     def get_db_notifications(self):
-        return ','.join(self.notifications)
+        return "Yes" if self.notifications else "No"
 
     def get_db_filters(self):
         return ','.join(self.filters)
@@ -44,7 +44,3 @@ class AccountID:
 
     def get_db_requests(self):
         return ','.join(self.requests)
-
-    # default constructor for getName
-    def __init__(self):
-        self.name = "Your Name"

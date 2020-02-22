@@ -47,7 +47,6 @@ def register():
 
         database.commit()
         cursor.close()
-        database.close()
         return json.dumps(response)
 
 
@@ -68,7 +67,7 @@ def login():
                 else:
                     session["loggedin"] = True
                     session["accId"] = accountId
-                    session["username"] = username
+                    session["username"] = content["username"]
             else:
                 response["status"] = "error"
                 response["reason"] = "missing username or password"
@@ -83,29 +82,30 @@ def login():
 @app.route("/accinfo", methods=["POST"])
 def accinfo():
     with sqlite3.connect("data/database.db") as database:
-    cursor = database.cursor()
-    response = {}
-    if (request.is_json):
-        if(session.get("loggedin")):
-            content = request.get_json()
-            if(content["accountId"]):
-                account = get_account(cursor, content["accountId"])
-                if(account):
-                    response["status"] = "success"
+        cursor = database.cursor()
+        response = {}
+        if (request.is_json):
+            if(session.get("loggedin")):
+                content = request.get_json()
+                if(content["accountId"]):
+                    account = get_account(cursor, content["accountId"])
+                    if(account):
+                        response["status"] = "success"
+                    else:
+                        response["status"] = "notfound"
+                        response["reason"] = "account not found"
                 else:
-                    response["status"] = "notfound"
-                    response["reason"] = "account not found"
+                    pass
             else:
-                pass
+                response["status"] = "unauthorized"
+                response["reason"] = "not logged in"
         else:
-            response["status"] = "unauthorized"
-            response["reason"] = "not logged in"
-    else:
-        response["status"] = "error"
-        response["reason"] = "Invalid JSON"
+            response["status"] = "error"
+            response["reason"] = "Invalid JSON"
 
     database.commit()
     cursor.close()
+    database.close()
     return json.dumps(response)
 
 if __name__ == '__main__':
