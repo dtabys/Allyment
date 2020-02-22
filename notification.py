@@ -2,13 +2,15 @@
 from twilio.rest import Client
 
 class notification:
+    def __init__(self, accountID, auth_token):
+        self.accountID = accountID
+        self.token = auth_token
 
-    def notify(accountID, auth_token):
+    def notify(self, contact, msg):
             # put your own credentials here
-            account_sid = accountID
-            auth_token = "9a22883785fdb5b26fc4406d43677cc9"
-            client = Client(account_sid, auth_token)
+            client = Client(self.accountID, self.token)
             client.messages.create(
-            to="+14805439520",
+            to=contact,
             from_="+19737185004",
-            body="Testing"
+            body=msg
+            )
