@@ -1,13 +1,11 @@
-import sqlite3
 from sqlite3 import Error
 import hashlib
-import os
 from Account import Account
 from Post import Post
 
 
 def hash_password(username, password):
-    salt = username[:5]
+    salt = username[:5].encode('utf-8')
     key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
     storage = salt + key
     return storage
@@ -32,6 +30,7 @@ def check_login(cur, username, password):
         return account_id[0]
     else:
         return None
+
 
 def register_account(cur, account, password):
     username = account.getName()
