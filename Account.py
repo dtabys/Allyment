@@ -23,7 +23,7 @@ class Account:
 
     # instance method
     def getfilters(self):
-        return self.notifications
+        return self.filters
 
     # instance method
     def getposts(self):
