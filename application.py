@@ -55,7 +55,7 @@ def register():
     return json.dumps(response)
 
 @app.route("/login", methods=["POST"])
-def register():
+def login():
     response = {}
 
     if (request.is_json):
