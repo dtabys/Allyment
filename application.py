@@ -117,7 +117,7 @@ def accinfo():
     return json.dumps(response)
 
 @app.route("/getpost", methods=["POST"])
-def accinfo():
+def getpost():
     with sqlite3.connect("data/database.db") as database:
         cursor = database.cursor()
         response = {}
