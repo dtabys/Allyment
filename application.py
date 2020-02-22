@@ -65,8 +65,10 @@ def login():
                     response["status"] = "unauthorized"
                     response["reason"] = "username or password incorrect"
                 else:
+                    response["status"] = "success"
+                    response["result"] = {"accountId" : accountId}
+                    session["accountId"] = accountId
                     session["loggedin"] = True
-                    session["accId"] = accountId
                     session["username"] = content["username"]
             else:
                 response["status"] = "error"
@@ -88,12 +90,17 @@ def accinfo():
             if(session.get("loggedin")):
                 content = request.get_json()
                 if(content["accountId"]):
-                    account = get_account(cursor, content["accountId"])
-                    if(account):
-                        response["status"] = "success"
+                    if(content["accountId"] == session.get("accountId")):
+                        account = get_account(cursor, content["accountId"])
+                        if(account):
+                            response["status"] = "success"
+                            response["result"] = account.__dict__
+                        else:
+                            response["status"] = "notfound"
+                            response["reason"] = "account not found"
                     else:
-                        response["status"] = "notfound"
-                        response["reason"] = "account not found"
+                        response["status"] = "unauthorized"
+                        response["reason"] = "access denied"
                 else:
                     pass
             else:

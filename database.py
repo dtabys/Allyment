@@ -28,8 +28,10 @@ def check_login(cur, username, password):
     password = hash_passwd(password)
     cur.execute("SELECT id FROM accounts WHERE passwd = ? AND name = ?", [password, username])
     account_id = cur.fetchone()
-    return account_id
-
+    if account_id:
+        return account_id[0]
+    else:
+        return None
 
 def register_account(cur, account, password):
     username = account.getName()
