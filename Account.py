@@ -44,3 +44,7 @@ class Account:
 
     def get_db_requests(self):
         return ','.join(self.requests)
+
+    def get_db_array(self, password):
+        return [self.name, password, self.get_db_notifications(), self.get_db_filters(), self.get_db_posts(),
+                self.get_db_requests()]
