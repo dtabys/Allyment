@@ -84,3 +84,15 @@ class Post:
                 self.getendtime(),
                 self.getcontact(), self.getdescription(), self.get_db_logistis(), self.get_db_tags(),
                 self.get_db_requests()]
+
+    def set_db_items(self):
+        return ','.split(self.items)
+
+    def set_db_logistis(self):
+        return ','.split(self.logistics)
+
+    def set_db_tags(self):
+        return ', '.split(self.tags)
+
+    def set_db_requests(self):
+        return ','.split(self.requests)
