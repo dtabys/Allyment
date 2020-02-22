@@ -4,7 +4,7 @@ import random
 import string
 from sqlite3 import Error
 import json
-from database import init_tables, check_login, register_account
+from database import init_tables, check_login, register_account, get_account
 from Account import Account
 
 app = Flask(__name__)
@@ -80,6 +80,33 @@ def login():
         cursor.close()
         return json.dumps(response)
 
+@app.route("/accinfo", methods=["POST"])
+def accinfo():
+    with sqlite3.connect("data/database.db") as database:
+    cursor = database.cursor()
+    response = {}
+    if (request.is_json):
+        if(session.get("loggedin")):
+            content = request.get_json()
+            if(content["accountId"]):
+                account = get_account(cursor, content["accountId"])
+                if(account):
+                    response["status"] = "success"
+                else:
+                    response["status"] = "notfound"
+                    response["reason"] = "account not found"
+            else:
+                pass
+        else:
+            response["status"] = "unauthorized"
+            response["reason"] = "not logged in"
+    else:
+        response["status"] = "error"
+        response["reason"] = "Invalid JSON"
+
+    database.commit()
+    cursor.close()
+    return json.dumps(response)
 
 if __name__ == '__main__':
     with sqlite3.connect("data/database.db") as database:
