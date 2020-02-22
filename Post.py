@@ -37,7 +37,7 @@ class Post:
         return self.start_time
 
     # instance method
-    def getduetime(self):
+    def getendtime(self):
         return self.end_time
 
     # instance method
@@ -64,6 +64,9 @@ class Post:
     def getname(self):
         return self.name
 
+    def get_db_location(self):
+        return ','.join(self.location)
+
     def get_db_items(self):
         return ','.join(self.items)
 
@@ -75,3 +78,8 @@ class Post:
 
     def get_db_requests(self):
         return ','.join(self.requests)
+
+    def get_db_array(self):
+        return [self.accountID, self.get_db_items(), self.get_db_location(), self.getstarttime(), self.getendtime(),
+                self.getcontact(), self.getdescription(), self.get_db_logistis(), self.get_db_tags(),
+                self.get_db_requests()]

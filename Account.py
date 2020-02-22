@@ -23,7 +23,7 @@ class Account:
 
     # instance method
     def getfilters(self):
-        return self.notifications
+        return self.filters
 
     # instance method
     def getposts(self):
@@ -44,3 +44,7 @@ class Account:
 
     def get_db_requests(self):
         return ','.join(self.requests)
+
+    def get_db_array(self, password):
+        return [self.name, password, self.get_db_notifications(), self.get_db_filters(), self.get_db_posts(),
+                self.get_db_requests()]

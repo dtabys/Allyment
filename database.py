@@ -34,22 +34,15 @@ def check_login(cur, username, password):
 
 def register_account(cur, account, password):
     username = account.getName()
-    password = hash_password(username, password)
-    notifications = account.get_db_notifications()
-    if not notifications:
-        print("notifications cannot be null")
-        return False
-    filters = account.get_db_filters()
-    posts = account.get_db_posts()
-    requests = account.get_db_requests()
-    insert = '''INSERT INTO accounts(name, passwd, notifications, filters, posts, requests)
-                VALUES(?,?,?,?,?,?)'''
-    values = [username, password, notifications, filters, posts, requests]
     cur.execute("SELECT id FROM accounts WHERE name = ?", [username])
     exists = cur.fetchone()
     if exists:
         return False
     else:
+        password = hash_password(username, password)
+        insert = '''INSERT INTO accounts(name, passwd, notifications, filters, posts, requests)
+                    VALUES(?,?,?,?,?,?)'''
+        values = account.get_db_array(password)
         cur.execute(insert, values)
         return True
 
@@ -62,6 +55,14 @@ def get_account(cur, account_id):
     else:
         account = None
     return account
+
+
+def add_post(cur, post):
+    insert = '''INSERT INTO posts(account_id, name, items, location, start_time, end_time, contact, description,
+                                    logistics, tags, requests)
+                VALUES(?,?,?,?,?,?)'''
+    values = post.get_db_array()
+    return cur.lastrowid
 
 
 def get_post(cur, post_id):
