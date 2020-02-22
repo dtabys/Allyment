@@ -1,9 +1,10 @@
 class Account:
 
     # Initializer / Instance Attributes
-    def __init__(self, name, accountID=None, notifications=False, filters=[], posts=[], requests=[]):
+    def __init__(self, name, contact, accountID=None, notifications=False, filters=[], posts=[], requests=[]):
         self.accountID = accountID
         self.name = name
+        self.contact = contact
         self.notifications = notifications
         self.filters = filters
         self.posts = posts
@@ -16,6 +17,9 @@ class Account:
     # instance method
     def getName(self):
         return self.name
+
+    def getContact(self):
+        return self.contact
 
     # instance method
     def getnotifications(self):
@@ -46,5 +50,5 @@ class Account:
         return ','.join(self.requests)
 
     def get_db_array(self, password):
-        return [self.name, password, self.get_db_notifications(), self.get_db_filters(), self.get_db_posts(),
+        return [self.name, password, self.contact, self.get_db_notifications(), self.get_db_filters(), self.get_db_posts(),
                 self.get_db_requests()]

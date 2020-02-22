@@ -1,7 +1,8 @@
 class Post:
 
     # Initializer / Instance Attributes
-    def __init__(self, name, postID=None, accountID=None, items=[], location=[0,0], start_time=0, end_time=0, contact="", description="", logistics=[], tags=[], requests=[]):
+    def __init__(self, name, postID=None, accountID=None, items=[], location=[0, 0], start_time=0, end_time=0,
+                 contact="", description="", logistics=[], tags=[], requests=[]):
         self.accountID = accountID
         self.postID = postID
         self.items = items
@@ -79,6 +80,7 @@ class Post:
         return ','.join(self.requests)
 
     def get_db_array(self):
-        return [self.accountID,self.name, self.get_db_items(), self.get_db_location(), self.getstarttime(), self.getendtime(),
+        return [self.accountID, self.name, self.get_db_items(), self.get_db_location(), self.getstarttime(),
+                self.getendtime(),
                 self.getcontact(), self.getdescription(), self.get_db_logistis(), self.get_db_tags(),
                 self.get_db_requests()]

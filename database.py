@@ -40,18 +40,18 @@ def register_account(cur, account, password):
         return False
     else:
         password = hash_password(username, password)
-        insert = '''INSERT INTO accounts(name, passwd, notifications, filters, posts, requests)
-                    VALUES(?,?,?,?,?,?)'''
+        insert = '''INSERT INTO accounts(username, password, contact, notifications, filters, posts, requests)
+                    VALUES(?,?,?,?,?,?,?)'''
         values = account.get_db_array(password)
         cur.execute(insert, values)
         return True
 
 
 def get_account(cur, account_id):
-    cur.execute("SELECT name, notifications, filters, posts, requests FROM accounts WHERE id = ?", [account_id])
+    cur.execute("SELECT username, contact, notifications, filters, posts, requests FROM accounts WHERE id = ?", [account_id])
     row = cur.fetchone()
     if row:
-        account = Account(account_id, row[0], row[1], row[2], row[3], row[4])
+        account = Account(account_id, row[0], row[1], row[2], row[3], row[4], row[5])
     else:
         account = None
     return account
@@ -83,8 +83,9 @@ def get_post(cur, post_id):
 def init_tables(cursor):
     sql_create_accounts_table = """ CREATE TABLE IF NOT EXISTS accounts (
                                             id integer PRIMARY KEY,
-                                            name text NOT NULL,
-                                            passwd text NOT NULL,
+                                            username text NOT NULL,
+                                            password text NOT NULL,
+                                            contact text NOT NULL,
                                             notifications text NOT NULL,
                                             filters text,
                                             posts text,
