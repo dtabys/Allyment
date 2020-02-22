@@ -8,7 +8,6 @@ app = Flask(__name__)
 
 database = sqlite3.connect("data/database.db")
 database.row_factory = sqlite3.Row
-dbcur = database.cursor()
 
 
 @app.route("/")
@@ -56,5 +55,8 @@ def login():
 
 
 if __name__ == '__main__':
+    dbcur = database.cursor()
     init_tables(dbcur)
+    database.commit()
+    dbcur.close()
     app.run("127.0.0.1", "8000")

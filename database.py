@@ -20,6 +20,7 @@ sql_create_accounts_table = """ CREATE TABLE IF NOT EXISTS accounts (
 
 sql_create_posts_table = """CREATE TABLE IF NOT EXISTS posts (
                                     id integer PRIMARY KEY,
+                                    account_id integer NOT NULL,
                                     name text NOT NULL,
                                     items text NOT NULL,
                                     location text NOT NULL,
@@ -35,19 +36,23 @@ sql_create_posts_table = """CREATE TABLE IF NOT EXISTS posts (
 
 sql_create_items_table = """CREATE TABLE IF NOT EXISTS items (
                                     id integer PRIMARY KEY,
+                                    account_id integer NOT NULL,
+                                    post_id integer NOT NULL,
                                     name text NOT NULL,
                                     description text,
                                     tags text,
                                     quantity integer NOT NULL,
-                                    FOREIGN KEY (posts_id) REFERENCES posts (id),
+                                    FOREIGN KEY (post_id) REFERENCES posts (id),
                                     FOREIGN KEY (account_id) REFERENCES accounts (id)
                                 );"""
 
 sql_create_requests_table = """CREATE TABLE IF NOT EXISTS requests (
                                     id integer PRIMARY KEY,
+                                    account_id integer NOT NULL,
+                                    post_id integer NOT NULL,
                                     request_items text NOT NULL,
                                     request_quantity integer NOT NULL,
-                                    FOREIGN KEY (posts_id) REFERENCES posts (id),
+                                    FOREIGN KEY (post_id) REFERENCES posts (id),
                                     FOREIGN KEY (account_id) REFERENCES accounts (id)
                                 );"""
 
