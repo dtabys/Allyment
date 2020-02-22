@@ -11,6 +11,7 @@ def create_table(cur, create_table_sql):
 
 sql_create_accounts_table = """ CREATE TABLE IF NOT EXISTS accounts (
                                         id integer PRIMARY KEY,
+                                        passwd text NOT NULL,
                                         name text NOT NULL,
                                         notifications text NOT NULL,
                                         filters text,
