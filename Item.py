@@ -1,6 +1,6 @@
 class Item:
 
-    def __init__(self, accountID=None, postID=None, name, description="", tags=[], quantity=0, itemID=None):
+    def __init__(self, name, accountID=None, postID=None, description="", tags=[], quantity=0, itemID=None):
         self.accountID = accountID
         self.postID = postID
         self.name = name
