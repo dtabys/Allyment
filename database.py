@@ -94,7 +94,7 @@ def add_item(cur, item):
 def get_item(cur, item_id):
     cur.execute('''
         SELECT account_id, post_id, name, description, tags, quantity
-        FROM posts WHERE id = ?''', [item_id])
+        FROM items WHERE id = ?''', [item_id])
     row = cur.fetchone()
     if row:
         item = Item(accountID=row[0], postID=row[1], name=row[2], description=row[3], tags=row[4], quantity=row[5],
