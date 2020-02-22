@@ -44,3 +44,7 @@ class AccountID:
 
     def get_db_requests(self):
         return ','.join(self.requests)
+
+    # default constructor for getName
+    def __init__(self):
+        self.name = "Your Name"
