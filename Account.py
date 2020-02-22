@@ -52,3 +52,12 @@ class Account:
     def get_db_array(self, password):
         return [self.name, password, self.contact, self.get_db_notifications(), self.get_db_filters(), self.get_db_posts(),
                 self.get_db_requests()]
+
+    def set__db__filters(self):
+        return ', '.split(self.filters)
+
+    def get__db__posts(self):
+        return ', '.split(self.posts)
+
+    def get__db__requests(self):
+        return ', '.split(self.requests)
