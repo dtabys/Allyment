@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="jdbc:sqlite:C:/Users/unkn0wn/Documents/Work/Hackathons &amp; Competitions/EmergenHack/Allyment/data/database.db" uuid="4f0e0cd6-142c-4fc9-9221-ba05b0084443">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/data/database.db</jdbc-url>
+    </data-source>
+  </component>
+</project>
