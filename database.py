@@ -2,6 +2,7 @@ import sqlite3
 from sqlite3 import Error
 import hashlib
 import os
+from Account import *
 
 salt = os.urandom(32)
 
@@ -50,6 +51,14 @@ def register_account(cur, account, password):
     else:
         cur.execute(insert, values)
         return True
+
+def get_account(cur, account_id):
+    cur.execute("SELECT name, notifications, filters, posts, requests FROM accounts WHERE id = ?", [account_id])
+    rows = cur.fetchone()
+    if rows:
+        for row in rows:
+            account = AccountID(account_id, row[0], row[1], row[2], row[3], row[4])
+    return None
 
 sql_create_accounts_table = """ CREATE TABLE IF NOT EXISTS accounts (
                                         id integer PRIMARY KEY,
