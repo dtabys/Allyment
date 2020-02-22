@@ -9,32 +9,32 @@ class AccountID:
         self.posts = posts
         self.requests = requests
 
-    #instance method
+    # instance method
     def getAccountID(self):
-        return "The accountID is: ".format(self.accountID)
+        return self.accountID
 
     # instance method
     def getName(self):
-        return "The Name is: ".format(self.name)
+        return self.name
 
-    #instance method
+    # instance method
     def getnotifications(self):
-        return "The notifications are: ".format(self.notification)
+        return self.notification
 
-    #instance method
+    # instance method
     def getfilters(self):
-        return "The filters are: ".format(self.notifications)
+        return self.notifications
 
-    #instance method
+    # instance method
     def getfilters(self):
-        return "The filters are: ".format(self.filters)
+        return self.filters
 
-    #instance method
+    # instance method
     def getposts(self):
-        return "The posts are: ".format(self.posts)
+        return self.posts
 
-    #instance method
+    # instance method
     def getrequests(self):
-        return "The requests are: ".format(self.requests)
+        return self.requests
 
 
