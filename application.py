@@ -32,8 +32,8 @@ def register():
 
         if (request.is_json):
             content = request.get_json()
-            if (content["username"] and content["password"]):
-                account = Account(content["username"])
+            if (content["username"] and content["password"] and content["contact"]):
+                account = Account(name=content["username"], contact=content["contact"])
                 if (register_account(cursor, account, content["password"])):
                     response["status"] = "success"
                 else:
