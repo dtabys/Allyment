@@ -4,8 +4,10 @@ import random
 import string
 from sqlite3 import Error
 import json
-from database import init_tables, check_login, register_account, get_account, get_post
+from database import *
 from Account import Account
+from Post inport Post
+import time
 
 app = Flask(__name__)
 
@@ -147,7 +149,49 @@ def getpost():
     database.close()
     return json.dumps(response)
 
+@app.route("/addpost", methods=["POST"])
+def addpost():
+    with sqlite3.connect("data/database.db") as database:
+        cursor = database.cursor()
+        response = {}
+        if (request.is_json):
+            if (session.get("loggedin")):
+                content = request.get_json()
+                if(content["name"] and content["location"] and content["end_time"]):
+                    post = Post(
+                    name=content["name"],
+                    accountID=session["accountId"],
+                    location=content["location"],
+                    end_time=content["end_time"],
+                    start_time=(content["start_time"] if content["start_time"] else time.gmtime()),
+                    contact=(content["contact"] if content["contact"] else ""),
+                    description=(content["description"] if content["description"] else ""),
+                    logistics=(content["logistics"] if (content["logistics"] and type(content["logistics"]) == list) else [""]),
+                    requests=(content["requests"] if (content["requests"] and type(content["requests"]) == list) else [""]),
+                    tags=(content["tags"] if (content["tags"] and type(content["tags"]) == list) else [""]),
+                    items=(content["items"] if (content["items"] and type(content["items"]) == list) else [""]),
+                     )
+                    postId = add_post(cursor, post)
+                    if(postId):
+                        response["status"] = "success"
+                        response["result"] = {"postId" : postId}
+                    else:
+                        response["status"] = "error"
+                        response["reason"] = "failed to add post"
+                else:
+                    response["status"] = "incomplete"
+                    response["reason"] = "postid missing"
+            else:
+                response["status"] = "unauthorized"
+                response["reason"] = "not logged in"
+        else:
+            response["status"] = "error"
+            response["reason"] = "Invalid JSON"
 
+    database.commit()
+    cursor.close()
+    database.close()
+    return json.dumps(response)
 
 if __name__ == '__main__':
     with sqlite3.connect("data/database.db") as database:

@@ -1,8 +1,8 @@
 class Post:
 
     # Initializer / Instance Attributes
-    def __init__(self, postID, accountID, name, items, location, start_time, end_time, contact, description, logistics,
-                 tags, requests):
+    def __init__(self, postID=None, accountID=None, name, items=[], location=[0,0], start_time=0, end_time=0, contact="", description="", logistics=[],
+                 tags=[], requests=[]):
         self.accountID = accountID
         self.postID = postID
         self.items = items
