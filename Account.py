@@ -26,10 +26,6 @@ class AccountID:
         return self.notifications
 
     # instance method
-    def getfilters(self):
-        return self.filters
-
-    # instance method
     def getposts(self):
         return self.posts
 

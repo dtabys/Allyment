@@ -1,13 +1,14 @@
 class Item:
 
     # Initializer / Instance Attributes
-    def __init__(self, accountID, postID, name, description, tags, quantity):
+    def __init__(self, accountID, postID, name, description, tags, quantity itemID):
         self.accountID = accountID
         self.postID = postID
         self.name = name
         self.description = description
         self.tags = tags
         self.quantity = quantity
+        self.itemID = itemID
 
     # instance method
     def getAccountID(self):
@@ -32,3 +33,7 @@ class Item:
     # instance method
     def getquantity(self):
         return self.quantity
+
+    # instance method
+    def getitemID(self):
+        return self.itemID

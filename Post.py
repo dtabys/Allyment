@@ -1,7 +1,7 @@
 class Post:
 
     # Initializer / Instance Attributes
-    def __init__(self, accountID, postID, items, location, starttime, duetime, contact, description, logistics, tags, requests):
+    def __init__(self, accountID, postID, items, location, starttime, duetime, contact, description, logistics, tags, requests, name):
         self.accountID = accountID
         self.postID = postID
         self.items = items
@@ -13,6 +13,7 @@ class Post:
         self.logistics = logistics
         self.tags = tags
         self.requests = requests
+        self.name = name
 
     # instance method
     def getAccountID(self):
@@ -57,3 +58,7 @@ class Post:
     # instance method
     def getrequests(self):
         return self.requests
+
+    # instance method
+    def getname(self):
+        return self.name
