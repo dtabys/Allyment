@@ -60,8 +60,10 @@ def get_account(cur, account_id):
 def add_post(cur, post):
     insert = '''INSERT INTO posts(account_id, name, items, location, start_time, end_time, contact, description,
                                     logistics, tags, requests)
-                VALUES(?,?,?,?,?,?)'''
+                VALUES(?,?,?,?,?,?,?,?,?,?,?)'''
     values = post.get_db_array()
+    print(values)
+    cur.execute(insert, values)
     return cur.lastrowid
 
 
