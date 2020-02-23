@@ -266,6 +266,76 @@ def getitem():
     database.close()
     return json.dumps(response)
 
+@app.route("/getrequest", methods=["POST"])
+def getrequest():
+    with sqlite3.connect("data/database.db") as database:
+        cursor = database.cursor()
+        response = {}
+        if (request.is_json):
+            if (session.get("loggedin")):
+                content = request.get_json()
+                if("requestId" in content):
+                    req = get_request(cursor, content["requestId"])
+                    if(item):
+                        response["status"] = "success"
+                        response["result"] = req.__dict__
+                    else:
+                        response["status"] = "notfound"
+                        response["reason"] = "request not found"
+                else:
+                    response["status"] = "incomplete"
+                    response["reason"] = "itemId missing"
+            else:
+                response["status"] = "unauthorized"
+                response["reason"] = "not logged in"
+        else:
+            response["status"] = "error"
+            response["reason"] = "Invalid JSON"
+
+    database.commit()
+    cursor.close()
+    database.close()
+    return json.dumps(response)
+
+@app.route("/addrequest", methods=["POST"])
+def addrequest():
+    with sqlite3.connect("data/database.db") as database:
+        cursor = database.cursor()
+        response = {}
+        if (request.is_json):
+            if (session.get("loggedin")):
+                content = request.get_json()
+                print(content)
+                if("items" in content and "postId" in content and "quantity" in content):
+                    req = Request(
+                    accountID=session["accountId"],
+                    postID=content["postId"],
+                    description=(content["description"] if content["description"] else ""),
+                    items=(content["items"] if (content["items"] and type(content["items"]) == list) else [])
+                    quantity=(content["quantity"] if (content["quantity"] and type(content["quantity"]) == list) else [])
+                    )
+                    reqId = add_request(cursor, item)
+                    if(reqId):
+                        response["status"] = "success"
+                        response["result"] = {"requestId" : reqId}
+                    else:
+                        response["status"] = "error"
+                        response["reason"] = "failed to add request"
+                else:
+                    response["status"] = "incomplete"
+                    response["reason"] = "items, quantity or postId missing"
+            else:
+                response["status"] = "unauthorized"
+                response["reason"] = "not logged in"
+        else:
+            response["status"] = "error"
+            response["reason"] = "Invalid JSON"
+
+    database.commit()
+    cursor.close()
+    database.close()
+    return json.dumps(response)
+
 if __name__ == '__main__':
     with sqlite3.connect("data/database.db") as database:
         dbcur = database.cursor()
