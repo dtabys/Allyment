@@ -284,7 +284,7 @@ def getrequest():
                         response["reason"] = "request not found"
                 else:
                     response["status"] = "incomplete"
-                    response["reason"] = "itemId missing"
+                    response["reason"] = "requestId missing"
             else:
                 response["status"] = "unauthorized"
                 response["reason"] = "not logged in"
@@ -311,7 +311,7 @@ def addrequest():
                     accountID=session["accountId"],
                     postID=content["postId"],
                     description=(content["description"] if content["description"] else ""),
-                    items=(content["items"] if (content["items"] and type(content["items"]) == list) else [])
+                    items=(content["items"] if (content["items"] and type(content["items"]) == list) else []),
                     quantity=(content["quantity"] if (content["quantity"] and type(content["quantity"]) == list) else [])
                     )
                     reqId = add_request(cursor, item)
