@@ -54,8 +54,12 @@ def get_account(cur, account_id):
                 [account_id])
     row = cur.fetchone()
     if row:
-        account = Account(accountID=account_id, name=row[0], contact=row[1], notifications=row[2], filters=row[3],
-                          posts=row[4], requests=row[5])
+        if row[2] == 'Yes':
+            notification = True
+        else:
+            notification = False
+        account = Account(accountID=account_id, name=row[0], contact=row[1], notifications=notification,
+                          filters=row[3].split(','), posts=row[4].split(','), requests=row[5].split(','))
     else:
         account = None
     return account
@@ -76,9 +80,10 @@ def get_post(cur, post_id):
         FROM posts WHERE id = ?''', [post_id])
     row = cur.fetchone()
     if row:
-        account = Post(postID=post_id, accountID=row[0], name=row[1], items=row[2], location=row[3], start_time=row[4],
-                       end_time=row[5], contact=row[6], description=row[7], logistics=row[8], tags=row[9],
-                       requests=row[10])
+        location = int(row[3].split(','))
+        account = Post(postID=post_id, accountID=row[0], name=row[1], items=row[2].split(','), location=location, start_time=row[4],
+                       end_time=row[5], contact=row[6], description=row[7], logistics=row[8].split(','), tags=row[9].split(','),
+                       requests=row[10].split(','))
     else:
         account = None
     return account
@@ -103,6 +108,7 @@ def get_item(cur, item_id):
     else:
         item = None
     return item
+
 
 def add_request(cur, request):
     insert = '''INSERT INTO requests(account_id, post_id, items, quantity)

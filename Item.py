@@ -42,6 +42,3 @@ class Item:
 
     def get_db_array(self):
         return [self.accountID, self.postID, self.name, self.description, self.get_db_tags(), self.quantity]
-
-    def set_db_tags(self):
-        return ', '.split(self.tags)
