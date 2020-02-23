@@ -24,7 +24,7 @@ def salt_key(storage):
 
 
 def convert_to_array(str, type):
-    output = None
+    output = []
     if len(str) != 0:
         if type == 'str':
             output = str.split(',')
@@ -183,7 +183,7 @@ def request_post(cur, post_id, request_id):
 
 def get_posts(cur, account, tags, location):
     posts = []
-    if not tags.isEmpty():
+    if len(tags) > 0:
         request = 'SELECT * FROM posts WHERE'
         for i in range(len(tags)):
             if i == len(tags) - 1:
@@ -210,21 +210,22 @@ def get_posts(cur, account, tags, location):
         posts.append(
             Post(name, postID, accountID, items, location, start_time, end_time, contact, description, logistics, tags,
                  requests))
-    for i in range(len(posts)):
-        for fil in account.filters:
-            if fil in posts[i].tags:
-                posts.pop(i)
+    if len(account.filters) > 0:
+        for i in range(len(posts)):
+            for fil in account.filters:
+                if fil in posts[i].tags:
+                    posts.pop(i)
 
-    sorted_posts = []
+    sorted_posts_tuple = []
     for post in posts:
         distance = dist(location, post.location)
-        sorted_posts.append((distance, post))
-    sorted_posts = sorted(sorted_posts, key=itemgetter(0))
+        sorted_posts_tuple.append((distance, post))
+    sorted_posts_tuple = sorted(sorted_posts_tuple, key=itemgetter(0))
 
-    post_id_list = []
-    for post in sorted_posts:
-        post_id_list.append(post[1].postID)
-    return post_id_list
+    sorted_posts = []
+    for post_tuple in sorted_posts_tuple:
+        sorted_posts.append(post_tuple[1])
+    return sorted_posts
 
 
 def init_tables(cursor):

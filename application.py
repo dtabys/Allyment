@@ -18,6 +18,7 @@ database.row_factory = sqlite3.Row
 SESSION_TYPE = 'memcached'
 app.secret_key = "TEST SECRET KEY CHANGE BEFORE DEPLOYMENT"
 
+
 @app.route("/")
 def index():
     response = {"status": "error", "reason": "invalid path"}
@@ -68,7 +69,7 @@ def login():
                     response["reason"] = "username or password incorrect"
                 else:
                     response["status"] = "success"
-                    response["result"] = {"accountId" : accountId}
+                    response["result"] = {"accountId": accountId}
                     session["accountId"] = accountId
                     session["loggedin"] = True
                     session["username"] = content["username"]
@@ -92,10 +93,10 @@ def accinfo():
         if (request.is_json):
             if (session.get("loggedin")):
                 content = request.get_json()
-                if("accountId" in content):
-                    if(content["accountId"] == session.get("accountId")):
+                if ("accountId" in content):
+                    if (content["accountId"] == session.get("accountId")):
                         account = get_account(cursor, content["accountId"])
-                        if(account):
+                        if (account):
                             response["status"] = "success"
                             response["result"] = account.__dict__
                         else:
@@ -119,6 +120,7 @@ def accinfo():
     database.close()
     return json.dumps(response)
 
+
 @app.route("/getpost", methods=["POST"])
 def getpost():
     with sqlite3.connect("data/database.db") as database:
@@ -127,9 +129,9 @@ def getpost():
         if (request.is_json):
             if (session.get("loggedin")):
                 content = request.get_json()
-                if("postId" in content):
+                if ("postId" in content):
                     post = get_post(cursor, content["postId"])
-                    if(post):
+                    if (post):
                         response["status"] = "success"
                         response["result"] = post.__dict__
                     else:
@@ -150,6 +152,7 @@ def getpost():
     database.close()
     return json.dumps(response)
 
+
 @app.route("/addpost", methods=["POST"])
 def addpost():
     with sqlite3.connect("data/database.db") as database:
@@ -158,25 +161,28 @@ def addpost():
         if (request.is_json):
             if (session.get("loggedin")):
                 content = request.get_json()
-                print(content)
-                if("name" in content and "location" in content and "end_time" in content):
+                if ("name" in content and "location" in content and "end_time" in content):
                     post = Post(
-                    name=content["name"],
-                    accountID=session["accountId"],
-                    location=content["location"],
-                    end_time=content["end_time"],
-                    start_time=(content["start_time"] if content["start_time"] else int(time.time())),
-                    contact=(content["contact"] if content["contact"] else ""),
-                    description=(content["description"] if content["description"] else ""),
-                    logistics=(content["logistics"] if (content["logistics"] and type(content["logistics"]) == list) else [""]),
-                    requests=(content["requests"] if (content["requests"] and type(content["requests"]) == list) else [""]),
-                    tags=(content["tags"] if (content["tags"] and type(content["tags"]) == list) else [""]),
-                    items=(content["items"] if (content["items"] and type(content["items"]) == list) else [""])
-                     )
+                        name=content["name"],
+                        accountID=session["accountId"],
+                        location=content["location"],
+                        end_time=content["end_time"],
+                        start_time=(content["start_time"] if content["start_time"] else int(time.time())),
+                        contact=(content["contact"] if content["contact"] else ""),
+                        description=(content["description"] if content["description"] else ""),
+                        logistics=(
+                            content["logistics"] if (content["logistics"] and type(content["logistics"]) == list) else [
+                                ""]),
+                        requests=(
+                            content["requests"] if (content["requests"] and type(content["requests"]) == list) else [
+                                ""]),
+                        tags=(content["tags"] if (content["tags"] and type(content["tags"]) == list) else [""]),
+                        items=(content["items"] if (content["items"] and type(content["items"]) == list) else [""])
+                    )
                     postId = add_post(cursor, post)
-                    if(postId):
+                    if (postId):
                         response["status"] = "success"
-                        response["result"] = {"postId" : postId}
+                        response["result"] = {"postId": postId}
                     else:
                         response["status"] = "error"
                         response["reason"] = "failed to add post"
@@ -195,6 +201,7 @@ def addpost():
     database.close()
     return json.dumps(response)
 
+
 @app.route("/additem", methods=["POST"])
 def additem():
     with sqlite3.connect("data/database.db") as database:
@@ -203,20 +210,19 @@ def additem():
         if (request.is_json):
             if (session.get("loggedin")):
                 content = request.get_json()
-                print(content)
-                if("name" in content and "quantity" in content and "postId" in content):
+                if ("name" in content and "quantity" in content and "postId" in content):
                     item = Item(
-                    accountID=session["accountId"],
-                    name=content["name"],
-                    quantity=content["quantity"],
-                    postID=content["postId"],
-                    description=(content["description"] if content["description"] else ""),
-                    tags=(content["tags"] if (content["tags"] and type(content["tags"]) == list) else [])
+                        accountID=session["accountId"],
+                        name=content["name"],
+                        quantity=content["quantity"],
+                        postID=content["postId"],
+                        description=(content["description"] if content["description"] else ""),
+                        tags=(content["tags"] if (content["tags"] and type(content["tags"]) == list) else [])
                     )
                     itemId = add_item(cursor, item)
-                    if(itemId):
+                    if (itemId):
                         response["status"] = "success"
-                        response["result"] = {"itemId" : itemId}
+                        response["result"] = {"itemId": itemId}
                     else:
                         response["status"] = "error"
                         response["reason"] = "failed to add item"
@@ -235,6 +241,7 @@ def additem():
     database.close()
     return json.dumps(response)
 
+
 @app.route("/getitem", methods=["POST"])
 def getitem():
     with sqlite3.connect("data/database.db") as database:
@@ -243,9 +250,9 @@ def getitem():
         if (request.is_json):
             if (session.get("loggedin")):
                 content = request.get_json()
-                if("itemId" in content):
+                if ("itemId" in content):
                     item = get_item(cursor, content["itemId"])
-                    if(item):
+                    if (item):
                         response["status"] = "success"
                         response["result"] = item.__dict__
                     else:
@@ -266,6 +273,7 @@ def getitem():
     database.close()
     return json.dumps(response)
 
+
 @app.route("/getrequest", methods=["POST"])
 def getrequest():
     with sqlite3.connect("data/database.db") as database:
@@ -274,9 +282,9 @@ def getrequest():
         if (request.is_json):
             if (session.get("loggedin")):
                 content = request.get_json()
-                if("requestId" in content):
+                if ("requestId" in content):
                     req = get_request(cursor, content["requestId"])
-                    if(req):
+                    if (req):
                         response["status"] = "success"
                         response["result"] = req.__dict__
                     else:
@@ -297,6 +305,7 @@ def getrequest():
     database.close()
     return json.dumps(response)
 
+
 @app.route("/addrequest", methods=["POST"])
 def addrequest():
     with sqlite3.connect("data/database.db") as database:
@@ -305,20 +314,21 @@ def addrequest():
         if (request.is_json):
             if (session.get("loggedin")):
                 content = request.get_json()
-                if("items" in content and "postId" in content and "quantity" in content):
+                if ("items" in content and "postId" in content and "quantity" in content):
                     post = get_post(cursor, content["postId"])
-                    if(post is not None):
+                    if (post is not None):
                         req = Request(
-                        accountID=session["accountId"],
-                        postID=content["postId"],
-                        items=(content["items"] if (content["items"] and type(content["items"]) == list) else []),
-                        quantity=(content["quantity"] if (content["quantity"] and type(content["quantity"]) == list) else [])
+                            accountID=session["accountId"],
+                            postID=content["postId"],
+                            items=(content["items"] if (content["items"] and type(content["items"]) == list) else []),
+                            quantity=(content["quantity"] if (
+                                        content["quantity"] and type(content["quantity"]) == list) else [])
                         )
                         reqId = add_request(cursor, req)
-                        if(reqId is not None):
-                            if(request_post(cursor, content["postId"], reqId)):
+                        if (reqId is not None):
+                            if (request_post(cursor, content["postId"], reqId)):
                                 response["status"] = "success"
-                                response["result"] = {"requestId" : reqId}
+                                response["result"] = {"requestId": reqId}
                             else:
                                 response["status"] = "error"
                                 response["reason"] = "unable to add requestId to post"
@@ -342,6 +352,47 @@ def addrequest():
     cursor.close()
     database.close()
     return json.dumps(response)
+
+
+@app.route("/getposts", methods=["POST"])
+def getposts():
+    with sqlite3.connect("data/database.db") as database:
+        cursor = database.cursor()
+        response = {}
+        if (request.is_json):
+            if (session.get("loggedin")):
+                content = request.get_json()
+                if ("tags" in content and "location" in content):
+                    account = get_account(cursor, session["accountId"])
+                    if account:
+                        posts = get_posts(cursor, account, content["tags"], content["location"])
+                        if len(posts) == 0:
+                            response["status"] = "notfound"
+                            response["reason"] = "too many tags or filters"
+                        else:
+                            response["status"] = "success"
+                            resp = []
+                            for post in posts:
+                                resp.append(post.__dict__)
+                            response["result"] = resp
+                    else:
+                        response["status"] = "error"
+                        response["reason"] = "account does not exist"
+                else:
+                    response["status"] = "incomplete"
+                    response["reason"] = "postid missing"
+            else:
+                response["status"] = "unauthorized"
+                response["reason"] = "not logged in"
+        else:
+            response["status"] = "error"
+            response["reason"] = "Invalid JSON"
+
+    database.commit()
+    cursor.close()
+    database.close()
+    return json.dumps(response)
+
 
 if __name__ == '__main__':
     with sqlite3.connect("data/database.db") as database:
