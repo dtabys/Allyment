@@ -74,3 +74,7 @@ Database.py
 -	Add_request: Returns the last location of request array.
 -	Get_request: Returns the request information.
 -	Init_tables: creates tables of accounts, posts, items, requests.
+
+
+Deploy.sh
+-	It is used to deploy the application to the customer.
