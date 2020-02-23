@@ -1,7 +1,7 @@
 class Request:
 
     # Initializer / Instance Attributes
-    def __init__(self, accountID, requestID, postID, items, quantity):
+    def __init__(self, accountID=None, requestID=None, postID=None, items=[], quantity=[]):
         self.accountID = accountID
         self.requestID = requestID
         self.postID = postID
@@ -30,3 +30,6 @@ class Request:
 
     def get_db_items(self):
         return ', '.split(self.items)
+
+    def get_db_array(self):
+        return [self.accountID, self.postID, self.get_db_items(), self.quantity]

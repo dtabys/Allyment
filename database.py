@@ -3,6 +3,7 @@ import hashlib
 from Account import Account
 from Post import Post
 from Item import Item
+from Request import Request
 
 
 def hash_password(username, password):
@@ -103,6 +104,25 @@ def get_item(cur, item_id):
         item = None
     return item
 
+def add_request(cur, request):
+    insert = '''INSERT INTO requests(account_id, post_id, items, quantity)
+                VALUES(?,?,?,?)'''
+    values = request.get_db_array()
+    cur.execute(insert, values)
+    return cur.lastrowid
+
+
+def get_request(cur, request_id):
+    cur.execute('''
+        SELECT account_id, post_id, items, quantity
+        FROM requests WHERE id = ?''', [request_id])
+    row = cur.fetchone()
+    if row:
+        item = Request(requestID=request_id, accountID=row[0], postID=row[1], items=row[2], quantity=row[3])
+    else:
+        item = None
+    return item
+
 
 def init_tables(cursor):
     sql_create_accounts_table = """ CREATE TABLE IF NOT EXISTS accounts (
@@ -148,8 +168,8 @@ def init_tables(cursor):
                                         id integer PRIMARY KEY,
                                         account_id integer NOT NULL,
                                         post_id integer NOT NULL,
-                                        request_items text NOT NULL,
-                                        request_quantity integer NOT NULL,
+                                        items text NOT NULL,
+                                        quantity integer NOT NULL,
                                         FOREIGN KEY (post_id) REFERENCES posts (id),
                                         FOREIGN KEY (account_id) REFERENCES accounts (id)
                                     );"""
