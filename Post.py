@@ -68,7 +68,7 @@ class Post:
         return str(self.location[0]) + "," + str(self.location[1])
 
     def get_db_items(self):
-        return ','.join(self.items)
+        return ','.join(str(x) for x in self.items)
 
     def get_db_logistics(self):
         return ','.join(self.logistics)
@@ -82,5 +82,5 @@ class Post:
     def get_db_array(self):
         return [self.accountID, self.name, self.get_db_items(), self.get_db_location(), self.getstarttime(),
                 self.getendtime(),
-                self.getcontact(), self.getdescription(), self.get_db_logistis(), self.get_db_tags(),
+                self.getcontact(), self.getdescription(), self.get_db_logistics(), self.get_db_tags(),
                 self.get_db_requests()]

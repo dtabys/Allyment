@@ -26,10 +26,10 @@ class Request:
 
     # instance method
     def getquantity(self):
-        return self.quantity
+        return ','.join(str(x) for x in self.quantity)
 
     def get_db_items(self):
-        return ', '.split(self.items)
+        return ','.join(str(x) for x in self.items)
 
     def get_db_array(self):
-        return [self.accountID, self.postID, self.get_db_items(), self.quantity]
+        return [self.accountID, self.postID, self.get_db_items(), self.getquantity()]

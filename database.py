@@ -80,8 +80,8 @@ def get_post(cur, post_id):
         FROM posts WHERE id = ?''', [post_id])
     row = cur.fetchone()
     if row:
-        location = int(row[3].split(','))
-        account = Post(postID=post_id, accountID=row[0], name=row[1], items=row[2].split(','), location=location, start_time=row[4],
+        location = [int(x) for x in row[3].split(',')]
+        account = Post(postID=post_id, accountID=row[0], name=row[1], items=[int(x) for x in row[2].split(',')], location=location, start_time=row[4],
                        end_time=row[5], contact=row[6], description=row[7], logistics=row[8].split(','), tags=row[9].split(','),
                        requests=row[10].split(','))
     else:
@@ -114,6 +114,7 @@ def add_request(cur, request):
     insert = '''INSERT INTO requests(account_id, post_id, items, quantity)
                 VALUES(?,?,?,?)'''
     values = request.get_db_array()
+    print(values)
     cur.execute(insert, values)
     return cur.lastrowid
 
@@ -175,7 +176,7 @@ def init_tables(cursor):
                                         account_id integer NOT NULL,
                                         post_id integer NOT NULL,
                                         items text NOT NULL,
-                                        quantity integer NOT NULL,
+                                        quantity text NOT NULL,
                                         FOREIGN KEY (post_id) REFERENCES posts (id),
                                         FOREIGN KEY (account_id) REFERENCES accounts (id)
                                     );"""

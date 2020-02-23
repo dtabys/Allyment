@@ -276,7 +276,7 @@ def getrequest():
                 content = request.get_json()
                 if("requestId" in content):
                     req = get_request(cursor, content["requestId"])
-                    if(item):
+                    if(req):
                         response["status"] = "success"
                         response["result"] = req.__dict__
                     else:
@@ -310,11 +310,10 @@ def addrequest():
                     req = Request(
                     accountID=session["accountId"],
                     postID=content["postId"],
-                    description=(content["description"] if content["description"] else ""),
                     items=(content["items"] if (content["items"] and type(content["items"]) == list) else []),
                     quantity=(content["quantity"] if (content["quantity"] and type(content["quantity"]) == list) else [])
                     )
-                    reqId = add_request(cursor, item)
+                    reqId = add_request(cursor, req)
                     if(reqId):
                         response["status"] = "success"
                         response["result"] = {"requestId" : reqId}
