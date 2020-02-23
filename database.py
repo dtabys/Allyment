@@ -144,7 +144,6 @@ def add_request(cur, request):
     insert = '''INSERT INTO requests(account_id, post_id, items, quantity)
                 VALUES(?,?,?,?)'''
     values = request.get_db_array()
-    print(values)
     cur.execute(insert, values)
     return cur.lastrowid
 
@@ -163,6 +162,14 @@ def get_request(cur, request_id):
     else:
         item = None
     return item
+
+
+def request_post(cur, post_id, request_id):
+    cur.execute('SELECT requests FROM posts WHERE id = ?', [post_id])
+    requests = convert_to_array(cur.fetchone()[0], 'int')
+    requests.append(request_id)
+    cur.execute('INSERT INTO posts(requests) VALUES(?)', ','.join(str(x) for x in requests))
+    return cur.lastrowid
 
 
 def init_tables(cursor):

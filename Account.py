@@ -44,10 +44,10 @@ class Account:
         return ','.join(self.filters)
 
     def get_db_posts(self):
-        return ','.join(self.posts)
+        return ','.join(str(x) for x in self.posts)
 
     def get_db_requests(self):
-        return ','.join(self.requests)
+        return ','.join(str(x) for x in self.requests)
 
     def get_db_array(self, password):
         return [self.name, password, self.contact, self.get_db_notifications(), self.get_db_filters(), self.get_db_posts(),
