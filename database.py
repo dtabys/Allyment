@@ -4,6 +4,12 @@ from Account import Account
 from Post import Post
 from Item import Item
 from Request import Request
+import math
+from operator import itemgetter
+
+
+def dist(p1, p2):
+    return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
 
 
 def hash_password(username, password):
@@ -107,11 +113,11 @@ def get_post(cur, post_id):
         logistics = convert_to_array(row[8], 'str')
         tags = convert_to_array(row[9], 'str')
         requests = convert_to_array(row[10], 'int')
-        account = Post(name, post_id, accountID, items, location, start_time, end_time, contact, description, logistics,
-                       tags, requests)
+        post = Post(name, post_id, accountID, items, location, start_time, end_time, contact, description, logistics,
+                    tags, requests)
     else:
-        account = None
-    return account
+        post = None
+    return post
 
 
 def add_item(cur, item):
@@ -158,10 +164,10 @@ def get_request(cur, request_id):
         postID = int(row[1])
         items = convert_to_array(row[2], 'int')
         quantity = convert_to_array(row[3], 'int')
-        item = Request(accountID, request_id, postID, items, quantity)
+        request = Request(accountID, request_id, postID, items, quantity)
     else:
-        item = None
-    return item
+        request = None
+    return request
 
 
 def request_post(cur, post_id, request_id):
@@ -170,9 +176,55 @@ def request_post(cur, post_id, request_id):
     if requests:
         requests.append(request_id)
     else:
-        requests = [request_id]        
+        requests = [request_id]
     cur.execute('UPDATE posts SET requests = ? WHERE id = ?', [','.join(str(x) for x in requests), post_id])
     return cur.lastrowid
+
+
+def get_posts(cur, account, tags, location):
+    posts = []
+    if not tags.isEmpty():
+        request = 'SELECT * FROM posts WHERE'
+        for i in range(len(tags)):
+            if i == len(tags) - 1:
+                request = request + ' tags LIKE "%?%"'
+            else:
+                request = request + ' tags LIKE "%?%" OR'
+        cur.execute(request, tags)
+    else:
+        cur.execute('SELECT * FROM posts')
+    rows = cur.fetchall()
+    for row in rows:
+        postID = int(row[0])
+        accountID = int(row[1])
+        name = row[2]
+        items = convert_to_array(row[3], 'int')
+        location = convert_to_array(row[4], 'int')
+        start_time = row[5]
+        end_time = row[6]
+        contact = row[7]
+        description = row[8]
+        logistics = convert_to_array(row[9], 'str')
+        tags = convert_to_array(row[10], 'str')
+        requests = convert_to_array(row[11], 'int')
+        posts.append(
+            Post(name, postID, accountID, items, location, start_time, end_time, contact, description, logistics, tags,
+                 requests))
+    for i in range(len(posts)):
+        for fil in account.filters:
+            if fil in posts[i].tags:
+                posts.pop(i)
+
+    sorted_posts = []
+    for post in posts:
+        distance = dist(location, post.location)
+        sorted_posts.append((distance, post))
+    sorted_posts = sorted(sorted_posts, key=itemgetter(0))
+
+    post_id_list = []
+    for post in sorted_posts:
+        post_id_list.append(post[1].postID)
+    return post_id_list
 
 
 def init_tables(cursor):
