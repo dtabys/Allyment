@@ -305,21 +305,29 @@ def addrequest():
         if (request.is_json):
             if (session.get("loggedin")):
                 content = request.get_json()
-                print(content)
                 if("items" in content and "postId" in content and "quantity" in content):
-                    req = Request(
-                    accountID=session["accountId"],
-                    postID=content["postId"],
-                    items=(content["items"] if (content["items"] and type(content["items"]) == list) else []),
-                    quantity=(content["quantity"] if (content["quantity"] and type(content["quantity"]) == list) else [])
-                    )
-                    reqId = add_request(cursor, req)
-                    if(reqId):
-                        response["status"] = "success"
-                        response["result"] = {"requestId" : reqId}
+                    post = get_post(cursor, content["postId"])
+                    if(post is not None):
+                        req = Request(
+                        accountID=session["accountId"],
+                        postID=content["postId"],
+                        items=(content["items"] if (content["items"] and type(content["items"]) == list) else []),
+                        quantity=(content["quantity"] if (content["quantity"] and type(content["quantity"]) == list) else [])
+                        )
+                        reqId = add_request(cursor, req)
+                        if(reqId is not None):
+                            if(request_post(cursor, content["postId"], reqId)):
+                                response["status"] = "success"
+                                response["result"] = {"requestId" : reqId}
+                            else:
+                                response["status"] = "error"
+                                response["reason"] = "unable to add requestId to post"
+                        else:
+                            response["status"] = "error"
+                            response["reason"] = "failed to add request"
                     else:
-                        response["status"] = "error"
-                        response["reason"] = "failed to add request"
+                        response["status"] = "notfound"
+                        response["reason"] = "post with postId not found"
                 else:
                     response["status"] = "incomplete"
                     response["reason"] = "items, quantity or postId missing"

@@ -19,7 +19,7 @@ def salt_key(storage):
 
 def convert_to_array(str, type):
     output = None
-    if not str.isEmpty():
+    if len(str) != 0:
         if type == 'str':
             output = str.split(',')
         elif type == 'int':
@@ -167,7 +167,10 @@ def get_request(cur, request_id):
 def request_post(cur, post_id, request_id):
     cur.execute('SELECT requests FROM posts WHERE id = ?', [post_id])
     requests = convert_to_array(cur.fetchone()[0], 'int')
-    requests.append(request_id)
+    if requests:
+        requests.append(request_id)
+    else:
+        requests = [request_id]        
     cur.execute('INSERT INTO posts(requests) VALUES(?)', ','.join(str(x) for x in requests))
     return cur.lastrowid
 

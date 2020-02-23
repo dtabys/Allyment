@@ -77,7 +77,7 @@ class Post:
         return ','.join(self.tags)
 
     def get_db_requests(self):
-        return ','.join(str(x) for x in self.posts)
+        return ','.join(str(x) for x in self.requests)
 
     def get_db_array(self):
         return [self.accountID, self.name, self.get_db_items(), self.get_db_location(), self.getstarttime(),
