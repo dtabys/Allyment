@@ -171,7 +171,7 @@ def request_post(cur, post_id, request_id):
         requests.append(request_id)
     else:
         requests = [request_id]        
-    cur.execute('INSERT INTO posts(requests) VALUES(?)', ','.join(str(x) for x in requests))
+    cur.execute('UPDATE posts SET requests = ? WHERE id = ?', [','.join(str(x) for x in requests), post_id])
     return cur.lastrowid
 
 
