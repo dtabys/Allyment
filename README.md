@@ -1,4 +1,5 @@
 # Allyment
+-Allyment is an interactive web based application where we aim to connect people around the world who wish to donate surplus food to non-profit organizations.
 Account.py:
 -	Constructor: initialize class variables
 -	getAccountId: Returns Account Id.
