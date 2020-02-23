@@ -58,3 +58,19 @@ Request.py:
 Notifiation.py
 -	Constructor: initializes class variables.
 -	Notify: Sends the client notification via text message.
+
+
+Database.py
+-	Hash_password: hashing the password
+-	Salt_key: prevents similar hashing of 2 same passwords.
+-	Create table: Creates a table.
+-	Check_login: checks login credentials.
+-	Register_account: registers a new account into the database with default values.
+-	Get_account: Returns account information.
+-	Add_post: Returns the last location in post array.
+-	Get_post: Returns the post information.
+-	add_item: returns the last location in the item array.
+-	Get_item: Returns the item information.
+-	Add_request: Returns the last location of request array.
+-	Get_request: Returns the request information.
+-	Init_tables: creates tables of accounts, posts, items, requests.
