@@ -17,6 +17,21 @@ def salt_key(storage):
     return storage[:32], storage[32:]  # (salt, key)
 
 
+def convert_to_array(str, type):
+    output = None
+    if not str.isEmpty():
+        if type == 'str':
+            output = str.split(',')
+        elif type == 'int':
+            output = [int(x) for x in str.split(',')]
+        elif type == 'bool':
+            if str == 'Yes':
+                output = True
+            else:
+                output = False
+    return output
+
+
 def create_table(cur, create_table_sql):
     try:
         cur.execute(create_table_sql)
@@ -54,12 +69,13 @@ def get_account(cur, account_id):
                 [account_id])
     row = cur.fetchone()
     if row:
-        if row[2] == 'Yes':
-            notification = True
-        else:
-            notification = False
-        account = Account(accountID=account_id, name=row[0], contact=row[1], notifications=notification,
-                          filters=row[3].split(','), posts=row[4].split(','), requests=row[5].split(','))
+        name = convert_to_array(row[0], 'str')
+        contact = convert_to_array(row[1], 'str')
+        notifications = convert_to_array(row[2], 'bool')
+        filters = convert_to_array(row[3], 'str')
+        posts = convert_to_array(row[4], 'int')
+        requests = convert_to_array(row[5], 'int')
+        account = Account(name, contact, account_id, notifications, filters, posts, requests)
     else:
         account = None
     return account
@@ -80,10 +96,19 @@ def get_post(cur, post_id):
         FROM posts WHERE id = ?''', [post_id])
     row = cur.fetchone()
     if row:
-        location = [int(x) for x in row[3].split(',')]
-        account = Post(postID=post_id, accountID=row[0], name=row[1], items=[int(x) for x in row[2].split(',')], location=location, start_time=row[4],
-                       end_time=row[5], contact=row[6], description=row[7], logistics=row[8].split(','), tags=row[9].split(','),
-                       requests=row[10].split(','))
+        accountID = int(row[0])
+        name = row[1]
+        items = convert_to_array(row[2], 'int')
+        location = convert_to_array(row[3], 'int')
+        start_time = row[4]
+        end_time = row[5]
+        contact = row[6]
+        description = row[7]
+        logistics = convert_to_array(row[8], 'str')
+        tags = convert_to_array(row[9], 'str')
+        requests = convert_to_array(row[10], 'int')
+        account = Post(name, post_id, accountID, items, location, start_time, end_time, contact, description, logistics,
+                       tags, requests)
     else:
         account = None
     return account
@@ -103,8 +128,13 @@ def get_item(cur, item_id):
         FROM items WHERE id = ?''', [item_id])
     row = cur.fetchone()
     if row:
-        item = Item(accountID=row[0], postID=row[1], name=row[2], description=row[3], tags=row[4], quantity=row[5],
-                    itemID=item_id)
+        name = row[2]
+        accountID = int(row[0])
+        postID = int(row[1])
+        description = row[3]
+        tags = convert_to_array(row[4], 'str')
+        quantity = int(row[5])
+        item = Item(name, accountID, postID, description, tags, quantity, item_id)
     else:
         item = None
     return item
@@ -125,7 +155,11 @@ def get_request(cur, request_id):
         FROM requests WHERE id = ?''', [request_id])
     row = cur.fetchone()
     if row:
-        item = Request(requestID=request_id, accountID=row[0], postID=row[1], items=row[2], quantity=row[3])
+        accountID = int(row[0])
+        postID = int(row[1])
+        items = convert_to_array(row[2], 'int')
+        quantity = convert_to_array(row[3], 'int')
+        item = Request(accountID, request_id, postID, items, quantity)
     else:
         item = None
     return item
